@@ -47,39 +47,42 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Team Vision"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _imgFile != null
-                ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Image.file(File(_imgFile!.path)),
-                  )
-                : const Text("Select Image"),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Opacity(
-                opacity: (isProcessing || hasImgProcessed) ? 0.75 : 1,
-                child: TextButton(
-                  onPressed: isProcessing
-                      ? null
-                      : _imgFile != null
-                          ? processImage
-                          : null,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Colors.blueAccent,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _imgFile != null
+                  ? Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Image.file(File(_imgFile!.path)),
+                    )
+                  : const Text("Select Image"),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Opacity(
+                  opacity: (isProcessing || hasImgProcessed) ? 0.75 : 1,
+                  child: TextButton(
+                    onPressed: isProcessing
+                        ? null
+                        : _imgFile != null
+                            ? processImage
+                            : null,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.blueAccent,
+                      ),
+                    ),
+                    child: const Text(
+                      "PROCESS",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  child: const Text(
-                    "PROCESS",
-                    style: TextStyle(color: Colors.white),
-                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: Opacity(
