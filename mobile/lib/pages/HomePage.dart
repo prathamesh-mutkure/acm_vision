@@ -13,35 +13,44 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ImagePicker _picker = ImagePicker();
   XFile? _imgFile;
+  bool isProcessing = false;
+  bool hasImgProcessed = false;
 
   void handleImageUpload() async {
+    if (isProcessing) return;
+
     XFile? file = await _picker.pickImage(source: ImageSource.gallery);
 
     if (file != null) {
-      debugPrint(file.path);
-
       setState(() {
         _imgFile = file;
+        hasImgProcessed = false;
       });
     } else {
       debugPrint("No Image found!");
     }
   }
 
-  onClickHandler() {
+  processImage() {
     debugPrint("Processed...");
+
+    // Set Loading to true
+    // Process
+    // Set new image and Text
+    // Loading to false
+    // set state hasImgProcessed = true
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Team Vision"),
+        title: const Text("Team Vision"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             _imgFile != null
                 ? Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -50,25 +59,35 @@ class _HomePageState extends State<HomePage> {
                 : const Text("Select Image"),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: TextButton(
-                onPressed: _imgFile != null ? onClickHandler : null,
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Colors.blueAccent,
+              child: Opacity(
+                opacity: (isProcessing || hasImgProcessed) ? 0.75 : 1,
+                child: TextButton(
+                  onPressed: isProcessing
+                      ? null
+                      : _imgFile != null
+                          ? processImage
+                          : null,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.blueAccent,
+                    ),
                   ),
-                ),
-                child: const Text(
-                  "PROCESS",
-                  style: TextStyle(color: Colors.white),
+                  child: const Text(
+                    "PROCESS",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: handleImageUpload,
-        child: const Icon(Icons.camera_alt),
+      floatingActionButton: Opacity(
+        opacity: isProcessing ? 0.8 : 1,
+        child: FloatingActionButton(
+          onPressed: isProcessing ? null : handleImageUpload,
+          child: const Icon(Icons.camera_alt),
+        ),
       ),
     );
   }
