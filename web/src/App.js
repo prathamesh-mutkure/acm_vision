@@ -4,16 +4,20 @@ import "./App.css";
 function App() {
   const [img, setImg] = useState();
   const imgRef = useRef();
-
-  const onProcessHandler = () => {
-    console.log("Process");
-  };
+  const [result, setResult] = useState("");
 
   const onImgClick = () => {
     imgRef?.current?.click();
+  };
 
-    setImg(imgRef?.current?.value);
-    console.log(imgRef?.current?.value);
+  const handleImageChange = (event) => {
+    setImg(event.target.files[0]);
+  };
+
+  const onProcessHandler = () => {
+    console.log("Process");
+
+    setResult("Result Here...");
   };
 
   return (
@@ -22,19 +26,22 @@ function App() {
         <input
           ref={imgRef}
           type="file"
-          accept="image/png image/jpeg"
-          alt="Select Image"
+          accept="image/*"
           name="img"
           id="img"
-          // value={img}
           style={{
             visibility: "hidden",
           }}
+          onChange={handleImageChange}
         />
 
         <div>
           {img ? (
-            <img src={img} className="App-logo" alt="logo" />
+            <img
+              src={URL.createObjectURL(img)}
+              className="App-logo"
+              alt="logo"
+            />
           ) : (
             <p>Select Image</p>
           )}
@@ -45,29 +52,37 @@ function App() {
             onClick={onImgClick}
             style={{
               color: "white",
-              background: "#62DAFB",
+              background: "#3f51b5",
               padding: "0.75rem",
               fontWeight: "bold",
               border: "none",
               margin: "1rem",
+              cursor: "pointer",
             }}
           >
             SELECT IMAGE
           </button>
 
           <button
-            onClick={onProcessHandler}
+            onClick={img ? onProcessHandler : null}
+            disabled={img == null}
             style={{
               color: "white",
-              background: "#62DAFB",
+              background: "#3f51b5",
               padding: "0.75rem",
               fontWeight: "bold",
               border: "none",
               margin: "1rem",
+              opacity: img ? 1 : 0.9,
+              cursor: img ? "pointer" : "not-allowed",
             }}
           >
             PROCESS
           </button>
+        </div>
+
+        <div>
+          <p>{result}</p>
         </div>
       </header>
     </div>
