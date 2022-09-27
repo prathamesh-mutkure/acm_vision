@@ -29,11 +29,17 @@ function App() {
 
     setIsLoading(true);
 
-    fetch("https://localhost:8000/predict")
+    const formData = new FormData();
+    formData.append("file", img);
+
+    fetch("http://localhost:8000/predict", {
+      method: "POST",
+      body: formData,
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setResult(data);
+        setResult("Result Here...");
         setIsLoading(false);
       })
       .catch((err) => {
