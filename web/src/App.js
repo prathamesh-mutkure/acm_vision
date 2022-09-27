@@ -5,8 +5,11 @@ function App() {
   const [img, setImg] = useState();
   const imgRef = useRef();
   const [result, setResult] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onImgClick = () => {
+    if (isLoading) return;
+
     imgRef?.current?.click();
   };
 
@@ -16,12 +19,27 @@ function App() {
     if (file == null) return;
 
     setImg(file);
+    setResult(null);
   };
 
-  const onProcessHandler = () => {
+  const onProcessHandler = async () => {
+    if (isLoading || !img) return;
+
     console.log("Process");
 
-    setResult("Result Here...");
+    setIsLoading(true);
+
+    fetch("https://jsonplaceholder.typicode.com/todos/1")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setResult("Result Here...");
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -61,15 +79,16 @@ function App() {
               fontWeight: "bold",
               border: "none",
               margin: "1rem",
-              cursor: "pointer",
+              opacity: !isLoading ? 1 : 0.9,
+              cursor: !isLoading ? "pointer" : "not-allowed",
             }}
           >
             SELECT IMAGE
           </button>
 
           <button
-            onClick={img ? onProcessHandler : null}
-            disabled={img == null}
+            onClick={img && !isLoading ? onProcessHandler : null}
+            disabled={(img && !isLoading) == null}
             style={{
               color: "white",
               background: "#3f51b5",
@@ -77,8 +96,8 @@ function App() {
               fontWeight: "bold",
               border: "none",
               margin: "1rem",
-              opacity: img ? 1 : 0.9,
-              cursor: img ? "pointer" : "not-allowed",
+              opacity: img && !isLoading ? 1 : 0.9,
+              cursor: img && !isLoading ? "pointer" : "not-allowed",
             }}
           >
             PROCESS
