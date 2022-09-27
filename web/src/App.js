@@ -29,11 +29,11 @@ function App() {
 
     setIsLoading(true);
 
-    fetch("https://jsonplaceholder.typicode.com/todos/1")
+    fetch("https://localhost:8000/predict")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setResult("Result Here...");
+        setResult(data);
         setIsLoading(false);
       })
       .catch((err) => {
